@@ -81,6 +81,9 @@
   .tick.bl{bottom:-4px;left:-4px}.tick.br{bottom:-4px;right:-4px}
 
   .top{display:flex;gap:16px;align-items:flex-end}
+  .stamp{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:.62rem;font-weight:600;
+    letter-spacing:.12em;color:var(--ink);display:flex;align-items:center;gap:6px}
+  .stamp::before{content:"";width:16px;height:3px;background:var(--blue)}
   .avatar{width:108px;height:108px;flex:none;position:relative;border:1px solid var(--ink);background:#fff}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar::after{content:"";position:absolute;inset:0;
@@ -88,6 +91,9 @@
   .title{font-weight:900;font-size:2.9rem;letter-spacing:-.07em;line-height:.85}
   .title span{color:var(--blue)}
   .meta{font-family:var(--mono);font-size:.64rem;color:var(--muted);margin-top:8px;line-height:1.6}
+  .role{display:inline-block;margin-top:8px;padding:2px 7px;background:var(--ink);color:#fff;
+    font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.08em}
+  .role::before{content:"■ ";color:var(--blue)}
   .dot{display:inline-block;width:7px;height:7px;margin-right:5px;background:#9aa3af;vertical-align:0}
 
   .rule{position:relative;height:1px;background:var(--ink);margin:16px 0 12px}
@@ -96,7 +102,7 @@
 
   .tags{font-family:var(--mono);font-size:.68rem;color:var(--ink);line-height:1.5}
   .tags .sep{color:var(--blue);margin:0 6px}
-  #yt{position:fixed;width:1px;height:1px;left:-10px;top:-10px;opacity:0;pointer-events:none}
+  #yt{position:fixed;width:200px;height:200px;left:0;bottom:0;opacity:0;pointer-events:none;z-index:-1}
   .links a.copied{background:var(--ink);border-color:var(--ink);color:#fff}
 
   .typed{font-family:var(--mono);font-size:.8rem;margin-top:12px;min-height:1.4em}
@@ -136,11 +142,59 @@
   #enter p{font-family:var(--mono);font-size:.7rem;animation:pulse 1.6s infinite}
   @keyframes pulse{50%{opacity:.3}}
 
-  #musicBtn{position:fixed;z-index:5;top:74px;right:22px;display:none;cursor:pointer;
+  #musicCtl{position:fixed;z-index:5;top:72px;right:22px;display:none;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:.62rem;color:var(--ink)}
+  #vol{-webkit-appearance:none;appearance:none;width:110px;height:13px;background:transparent;cursor:pointer}
+  #vol::-webkit-slider-runnable-track{height:1px;background:var(--ink)}
+  #vol::-moz-range-track{height:1px;background:var(--ink)}
+  #vol::-moz-range-progress{height:3px;background:var(--blue)}
+  #vol::-webkit-slider-thumb{-webkit-appearance:none;width:9px;height:9px;margin-top:-4px;background:var(--blue);
+    border:1px solid var(--ink);border-radius:0}
+  #vol::-moz-range-thumb{width:9px;height:9px;background:var(--blue);border:1px solid var(--ink);border-radius:0}
+  #volVal{min-width:3ch;text-align:right}
+  #musicBtn{cursor:pointer;
     font-family:var(--mono);font-size:.62rem;background:none;border:none;color:var(--ink)}
   #musicBtn:hover{color:var(--blue)}
 
+  /* ---------- capa maximalista ---------- */
+  .sky.tall{width:min(150px,14vw);height:min(420px,52vh);transform:translate(-330%,-88%);
+    background:linear-gradient(180deg,#e8f3ff,#4f98f2 55%,#1c66db)}
+  .sky.strip{width:min(520px,46vw);height:26px;transform:translate(-20%,560%);
+    background:linear-gradient(90deg,#1c66db,#7fb6ff 60%,transparent)}
+  .frame{position:fixed;z-index:1;border:1px solid rgba(11,15,23,.55);pointer-events:none}
+  .frame.f1{width:min(820px,94vw);height:min(540px,70vh);left:50%;top:50%;transform:translate(-47%,-51%)}
+  .frame.f2{width:min(260px,32vw);height:min(170px,22vh);left:50%;top:50%;transform:translate(138%,84%);border-style:dashed}
+  .frame.f3{width:120px;height:120px;left:6%;top:58%;border-color:rgba(47,124,246,.7)}
+  .ghost{position:fixed;z-index:0;left:-2vw;bottom:-6vw;font-family:var(--sans);font-weight:900;
+    font-size:24vw;letter-spacing:-.08em;line-height:.8;color:transparent;
+    -webkit-text-stroke:1px rgba(11,15,23,.13);pointer-events:none;user-select:none}
+  .ruler{position:fixed;z-index:2;left:0;right:0;top:0;height:9px;pointer-events:none;opacity:.6;
+    background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 10px),
+               repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 50px);
+    background-size:100% 4px,100% 9px;background-repeat:no-repeat}
+  .ruler.bottom{top:auto;bottom:0;transform:scaleY(-1)}
+  .vtext{position:fixed;z-index:2;right:12px;top:50%;transform:translateY(-50%) rotate(180deg);
+    writing-mode:vertical-rl;font-family:var(--mono);font-size:.58rem;letter-spacing:.3em;color:var(--ink);opacity:.7}
+  .halftone{position:fixed;z-index:1;width:220px;height:220px;pointer-events:none;
+    background:radial-gradient(var(--blue) 1.4px,transparent 1.6px) 0 0/8px 8px;
+    -webkit-mask:radial-gradient(circle,#000 0,transparent 70%);mask:radial-gradient(circle,#000 0,transparent 70%)}
+  .halftone.h1{right:6%;top:8%}
+  .halftone.h2{left:14%;bottom:4%;width:160px;height:160px;
+    background-image:radial-gradient(var(--ink) 1.2px,transparent 1.4px)}
+  .tagbox{position:fixed;z-index:2;font-family:var(--mono);font-size:.55rem;pointer-events:none}
+  .tagbox b{display:inline-block;background:var(--ink);color:#fff;padding:2px 6px;font-weight:600;letter-spacing:.1em}
+  .tagbox span{display:inline-block;background:var(--blue);color:#fff;padding:2px 6px}
+  .tagbox.t1{top:13%;left:31%}
+  .tagbox.t2{bottom:11%;right:27%}
+  .tagbox.t3{top:47%;left:4%}
+  .blocks{position:fixed;z-index:2;display:grid;grid-template-columns:repeat(6,8px);gap:3px;pointer-events:none}
+  .blocks i{display:block;width:8px;height:8px;background:var(--ink)}
+  .blocks i:nth-child(3n){background:var(--blue)} .blocks i:nth-child(4n+1){background:transparent;border:1px solid var(--ink)}
+  .blocks.b1{right:4%;bottom:30%}
+  .blocks.b2{left:24%;top:6%}
+
   @media (max-width:640px){
+    .sky.tall,.sky.strip,.frame.f2,.frame.f3,.ghost,.vtext,.halftone,.tagbox,.blocks{display:none}
     .sky{transform:translate(-50%,-50%);height:72vh}
     .sky.small,.log,.vbar{display:none}
     .links{grid-template-columns:repeat(2,1fr)}
@@ -154,6 +208,11 @@
   <!-- fons -->
   <div class="sky" id="sky"><div class="sky-label">// sky.layer_01 — iuer0.net</div></div>
   <div class="sky small" id="sky2"></div>
+  <div class="sky tall" id="sky3"></div>
+  <div class="sky strip"></div>
+  <div class="ghost">iuer0</div>
+  <div class="frame f1"></div><div class="frame f2"></div><div class="frame f3"></div>
+  <div class="halftone h1"></div><div class="halftone h2"></div>
   <canvas id="fx"></canvas>
 
   <!-- HUD -->
@@ -169,23 +228,39 @@
   <div class="log b" id="logB"></div>
   <div class="cross" style="top:30%;left:22%"></div>
   <div class="cross" style="bottom:24%;right:20%"></div>
+  <div class="cross" style="top:12%;left:58%"></div>
+  <div class="cross" style="bottom:9%;left:40%"></div>
+  <div class="cross" style="top:64%;right:9%"></div>
+  <div class="ruler"></div><div class="ruler bottom"></div>
+  <div class="vtext">iuer0.com — music &amp; networking — node_00 — 2026</div>
+  <div class="tagbox t1"><b>LAYER</b><span>01/07</span></div>
+  <div class="tagbox t2"><b>SIGNAL</b><span>stable</span></div>
+  <div class="tagbox t3"><b>RX</b><span id="rx">0 kb/s</span></div>
+  <div class="blocks b1"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="blocks b2"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
   <div id="enter"><div class="box">
     <h2>iuer0<span>.</span></h2>
     <div class="bar"></div>
     <p>[ clica per entrar ]</p>
   </div></div>
-  <button id="musicBtn">[ so: on ]</button>
+  <div id="musicCtl">
+    <button id="musicBtn">[ so: on ]</button>
+    <span>vol</span><input type="range" id="vol" min="0" max="100" step="1" aria-label="Volum"><span id="volVal"></span>
+  </div>
   <div id="yt"></div>
+  <audio id="audio" loop preload="auto"></audio>
 
   <!-- targeta -->
   <div class="wrap" id="wrap">
     <main class="card">
       <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
+      <div class="stamp">07 // FEB</div>
       <div class="top">
         <div class="avatar" id="avatar"></div>
         <div>
           <h1 class="title" id="name"></h1>
+          <div class="role">IT Student</div>
           <div class="meta">
             <div><span class="dot" id="dot"></span><span id="statusText">offline</span></div>
             <div>iuer0.com</div>
@@ -214,8 +289,10 @@ const CONFIG = {
   ],
   tags: ["ensopit", "sleepy", "larp till you make it"],
   discordId: "620169027612049409",            // la teva ID de Discord (via Lanyard) per l'estat en directe
+  music: "",                // un mp3 teu a la mateixa carpeta, ex: "music.mp3" (té prioritat sobre YouTube)
   youtube: "uhwtQqGkepA",   // ID del vídeo de YouTube per a la música (buit = sense música)
-  volume: 35,               // 0-100
+  volume: 50,               // volum inicial de la barra, 0-100
+  master: 0.7,              // volum general: la barra al 100 sona al 70% real
   // url = obre un enllaç · copy = copia el text al porta-retalls (per a IDs sense pàgina pública)
   links: [
     { icon: "fa-brands fa-spotify",   label: "spotify", url: "https://open.spotify.com/user/zuh7qpa4j5euwswd0qdp341jw" },
@@ -266,7 +343,8 @@ function clouds(el, n){
     el.appendChild(c);
   }
 }
-clouds($("sky"), 14); clouds($("sky2"), 4);
+clouds($("sky"), 14); clouds($("sky2"), 4); clouds($("sky3"), 5);
+setInterval(() => $("rx").textContent = (40 + Math.random() * 900).toFixed(0) + " kb/s", 700);
 
 // --- rellotge ---
 setInterval(() => $("clock").textContent = new Date().toLocaleTimeString("ca-ES"), 1000);
@@ -303,30 +381,72 @@ function typewriter(lines){
 // --- entrada + música ---
 // La música es reprodueix amb el reproductor oficial de YouTube, amagat
 let player = null, ytReady = false, wantPlay = false, muted = false;
-if (CONFIG.youtube){
+const audio = $("audio");
+const useFile = !!CONFIG.music;
+const realVol = v => Math.round(v * CONFIG.master);
+if (useFile){ audio.src = CONFIG.music; audio.volume = realVol(CONFIG.volume) / 100; }
+if (CONFIG.youtube && !useFile){
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
   document.head.appendChild(tag);
 }
 window.onYouTubeIframeAPIReady = () => {
   player = new YT.Player("yt", {
-    width: 1, height: 1, videoId: CONFIG.youtube,
-    playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: CONFIG.youtube, playsinline: 1 },
-    events: { onReady: () => { ytReady = true; player.setVolume(CONFIG.volume); if (wantPlay) player.playVideo(); } }
+    width: 200, height: 200, videoId: CONFIG.youtube,
+    playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: CONFIG.youtube, playsinline: 1,
+                  origin: location.protocol.startsWith("http") ? location.origin : undefined },
+    events: {
+      onReady: () => { ytReady = true; player.unMute(); player.setVolume(realVol(CONFIG.volume)); if (wantPlay) player.playVideo(); },
+      onError: e => {
+        // 2 = ID incorrecte · 100 = vídeo no existeix · 101/150 = el propietari no deixa incrustar-lo · 153 = pàgina oberta com a arxiu
+        const why = { 2:"id", 5:"html5", 100:"no existeix", 101:"no incrustable", 150:"no incrustable", 153:"obre-la per http" }[e.data] || e.data;
+        $("musicCtl").style.display = "flex";
+        $("musicBtn").textContent = `[ so: error ${e.data} · ${why} ]`;
+        console.warn("YouTube error", e.data, why);
+      }
+    }
   });
 };
 $("enter").addEventListener("click", () => {
   $("enter").classList.add("hidden");
   $("wrap").classList.add("show");
   typewriter(CONFIG.bio);
-  if (CONFIG.youtube){
+  if (useFile){
+    audio.play().catch(() => {});
+    $("musicCtl").style.display = "flex";
+  } else if (CONFIG.youtube){
     wantPlay = true;
-    if (ytReady) player.playVideo();
-    $("musicBtn").style.display = "block";
+    if (ytReady){ player.unMute(); player.playVideo(); }
+    $("musicCtl").style.display = "flex";
+  }
+});
+// barra de volum
+const vol = $("vol");
+function setVol(v){
+  v = Math.max(0, Math.min(100, +v));
+  vol.value = v; $("volVal").textContent = v;
+  if (useFile) audio.volume = realVol(v) / 100;
+  else if (player && ytReady) player.setVolume(realVol(v));
+  CONFIG.volume = v;
+}
+setVol(CONFIG.volume);
+vol.addEventListener("input", e => {
+  setVol(e.target.value);
+  // si estava silenciat i puges el volum, es torna a activar
+  if (+e.target.value > 0){
+    if (useFile && audio.muted){ audio.muted = false; $("musicBtn").textContent = "[ so: on ]"; }
+    if (!useFile && player && ytReady && muted){ player.unMute(); muted = false; $("musicBtn").textContent = "[ so: on ]"; }
   }
 });
 $("musicBtn").addEventListener("click", () => {
-  if (!player) return;
+  if (useFile){
+    if (audio.paused){ audio.play(); audio.muted = false; }
+    else audio.muted = !audio.muted;
+    $("musicBtn").textContent = audio.muted ? "[ so: off ]" : "[ so: on ]";
+    return;
+  }
+  if (!player || !ytReady) return;
+  if (player.getPlayerState && player.getPlayerState() !== 1){ player.unMute(); player.playVideo(); muted = false; $("musicBtn").textContent = "[ so: on ]"; return; }
   muted = !muted;
   muted ? player.mute() : player.unMute();
   $("musicBtn").textContent = muted ? "[ so: off ]" : "[ so: on ]";
@@ -370,12 +490,33 @@ function resize(){
 addEventListener("resize", resize); resize();
 
 const rnd = (a, b) => a + Math.random() * (b - a);
-const RIB = Array.from({ length: 11 }, (_, i) => ({
-  a: (i / 11) * Math.PI + rnd(-.25, .25),
+const RIB = Array.from({ length: 16 }, (_, i) => ({
+  a: (i / 16) * Math.PI + rnd(-.2, .2),
   amp: rnd(30, 120), f: rnd(1.2, 3), s: rnd(.15, .45), p: rnd(0, 6),
   w: rnd(5, 34), dark: Math.random() < .35
 }));
-const HAIR = Array.from({ length: 16 }, () => ({
+// segona explosió, més petita, a baix a la dreta
+const RIB2 = Array.from({ length: 7 }, (_, i) => ({
+  a: (i / 7) * Math.PI + rnd(-.3, .3),
+  amp: rnd(15, 60), f: rnd(1.5, 3.5), s: rnd(.2, .5), p: rnd(0, 6),
+  w: rnd(3, 16), dark: Math.random() < .4
+}));
+// destells en forma d'estrella
+const GLINT = Array.from({ length: 14 }, () => ({ x: rnd(.08, .95), y: rnd(.08, .92), s: rnd(6, 22), p: rnd(0, 6), v: rnd(.6, 1.6) }));
+function glint(x, y, size, a){
+  ctx.save(); ctx.globalAlpha = a; ctx.translate(x, y);
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, size);
+  g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(.3, "rgba(190,220,255,.6)"); g.addColorStop(1, "rgba(190,220,255,0)");
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  for (let k = 0; k < 4; k++){
+    const ang = k * Math.PI / 2;
+    ctx.lineTo(Math.cos(ang) * size, Math.sin(ang) * size);
+    ctx.lineTo(Math.cos(ang + Math.PI / 4) * size * .12, Math.sin(ang + Math.PI / 4) * size * .12);
+  }
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+const HAIR = Array.from({ length: 26 }, () => ({
   a: rnd(0, Math.PI), amp: rnd(10, 80), f: rnd(.8, 2.5), s: rnd(.1, .3), p: rnd(0, 6), blue: Math.random() < .3
 }));
 
@@ -438,7 +579,19 @@ function drawRibbon(r, t, cx, cy, L){
     ctx.lineWidth = .7;
     ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
   }
+  // anells concèntrics al voltant del centre
+  ctx.lineWidth = .6;
+  for (let k = 1; k <= 4; k++){
+    ctx.strokeStyle = k % 2 ? "rgba(11,15,23,.18)" : "rgba(47,124,246,.3)";
+    ctx.beginPath(); ctx.ellipse(cx, cy, 90 * k + Math.sin(t * .4 + k) * 6, 40 * k, -.35, 0, Math.PI * 2); ctx.stroke();
+  }
+  const cx2 = W * .86 - mx * 25, cy2 = H * .8 - my * 20;
+  for (const r of RIB2) drawRibbon(r, t, cx2, cy2, Math.max(W, H) * .55);
   for (const r of RIB) drawRibbon(r, t, cx, cy, L * .8);
+  for (const g of GLINT){
+    const a = Math.max(0, Math.sin(t * g.v + g.p));
+    if (a > .05) glint(g.x * W, g.y * H, g.s * (.6 + .4 * a), a * .95);
+  }
   requestAnimationFrame(loop);
 })(0);
 </script>
