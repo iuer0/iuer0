@@ -179,7 +179,7 @@
   .frame.f2{width:min(260px,32vw);height:min(170px,22vh);left:50%;top:50%;transform:translate(138%,84%);border-style:dashed}
   .frame.f3{width:120px;height:120px;left:6%;top:58%;border-color:rgba(47,124,246,.7)}
   .ghost{position:fixed;z-index:0;left:-2vw;bottom:-6vw;font-family:var(--sans);font-weight:900;
-    font-size:24vw;letter-spacing:-.08em;line-height:.8;color:transparent;
+    font-size:24vw;letter-spacing:.01em;line-height:.8;color:transparent;
     -webkit-text-stroke:1px rgba(11,15,23,.13);pointer-events:none;user-select:none}
   .ruler{position:fixed;z-index:2;left:0;right:0;top:0;height:9px;pointer-events:none;opacity:.6;
     background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 10px),
@@ -471,7 +471,17 @@ window.onYouTubeIframeAPIReady = () => {
     }
   });
 };
+// el clic d'entrada espera que el reproductor estigui llest: així el navegador deixa activar el so amb el mateix clic
+const enterP = document.querySelector("#enter p"), enterTxt = enterP.textContent;
+let enterOk = useFile || !CONFIG.youtube;
+if (!enterOk){
+  enterP.textContent = "[ carregant... ]";
+  const ok = () => { if (enterOk) return; enterOk = true; enterP.textContent = enterTxt; };
+  const iv = setInterval(() => { if (ytReady){ clearInterval(iv); ok(); } }, 100);
+  setTimeout(ok, 5000);   // si YouTube no respon, deixa entrar igualment
+}
 $("enter").addEventListener("click", () => {
+  if (!enterOk) return;
   $("enter").classList.add("hidden");
   $("wrap").classList.add("show");
   typewriter(CONFIG.bio);
@@ -489,6 +499,15 @@ $("enter").addEventListener("click", () => {
     }, 2500);
   }
 });
+// xarxa de seguretat: si el so no ha arrencat, el primer toc/clic a la pàgina l'activa
+const kick = () => {
+  if (useFile || !player || !ytReady || !wantPlay) return;
+  if (player.getPlayerState && player.getPlayerState() !== 1 || player.isMuted()){
+    player.unMute(); player.setVolume(realVol(CONFIG.volume)); player.playVideo();
+    $("musicBtn").textContent = "[ so: on ]";
+  }
+};
+document.addEventListener("pointerdown", kick);
 // barra de volum
 const vol = $("vol");
 if (IOS){ vol.style.display = "none"; $("volVal").style.display = "none"; $("volLbl").style.display = "none"; }   // iOS ignora el volum de la pàgina
