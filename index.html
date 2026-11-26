@@ -135,8 +135,10 @@
     box-shadow:0 0 0 2px rgba(35,165,90,.25);animation:live 2s ease-in-out infinite}
   @keyframes live{50%{box-shadow:0 0 0 4px rgba(35,165,90,0)}}
   .tags .moon{color:#8b939e;width:12px;height:12px}
-  .tags .live.busy{background:#f23f43;box-shadow:0 0 0 2px rgba(242,63,67,.25);animation-name:busy}
-  @keyframes busy{50%{box-shadow:0 0 0 4px rgba(242,63,67,0)}}
+  /* icones com les de Discord: dnd (cercle vermell amb ratlla) i idle (lluna groga) */
+  .tags .dnd{position:relative;display:inline-block;width:10px;height:10px;border-radius:50%;background:#f23f43}
+  .tags .dnd::after{content:"";position:absolute;left:2px;right:2px;top:4px;height:2px;border-radius:1px;background:var(--paper)}
+  .tags .moon.idle{color:#f0b232}
   #yt{position:fixed;width:200px;height:200px;left:0;bottom:0;opacity:0;pointer-events:none;z-index:-1}
   .links a.copied{background:var(--ink);border-color:var(--ink);color:var(--oninv)}
 
@@ -393,7 +395,8 @@ const img = new Image(); img.alt = CONFIG.name; img.src = CONFIG.avatar; $("avat
 function renderTags(status){
   const base = CONFIG.tags.map(esc).join('<span class="sep">/</span>');
   const st = status === "online" ? '<span class="st on"><i class="live"></i>available</span>'
-    : status === "dnd" ? '<span class="st on"><i class="live busy"></i>busy</span>'
+    : status === "dnd" ? '<span class="st on"><i class="dnd"></i>busy</span>'
+    : status === "idle" ? `<span class="st">${ico("moon","moon idle")}afk</span>`
     : `<span class="st">${ico("moon","moon")}afk</span>`;
   $("tags").innerHTML = base + '<span class="sep">/</span>' + st;
 }
@@ -407,7 +410,7 @@ const PAL = {   // [dia, nit] en rgba
   dots:[[11,15,23,.16],[150,180,230,.16]],  frame:[[11,15,23,.55],[170,195,235,.35]],
   ghost:[[11,15,23,.13],[170,200,255,.12]]
 };
-const THEMES = { online:[0,0], dnd:[0,0], idle:[1,1], offline:[1,0] };
+const THEMES = { online:[0,0], dnd:[1,1], idle:[1,0], offline:[1,0] };
 const lerp = (a, b, t) => a + (b - a) * t;
 const mix2 = (a, b, t) => `rgba(${[0,1,2].map(i => Math.round(lerp(a[i], b[i], t))).join(",")},${lerp(a[3], b[3], t).toFixed(3)})`;
 // 3 colors: passa per un blau de capvespre en lloc d'un gris
