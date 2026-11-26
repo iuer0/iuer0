@@ -452,15 +452,10 @@ if (CONFIG.youtube && !useFile){
 window.onYouTubeIframeAPIReady = () => {
   player = new YT.Player("yt", {
     width: 200, height: 200, videoId: CONFIG.youtube,
-    playerVars: { autoplay: 1, mute: 1, controls: 0, loop: 1, playlist: CONFIG.youtube, playsinline: 1,
+    playerVars: { autoplay: 0, controls: 0, loop: 1, playlist: CONFIG.youtube, playsinline: 1,
                   origin: location.protocol.startsWith("http") ? location.origin : undefined },
     events: {
-      onReady: () => {
-        ytReady = true; player.setVolume(realVol(CONFIG.volume));
-        // arrenca en silenci (el navegador ho permet); el clic d'entrada li treu el mute
-        player.mute(); player.playVideo();
-        if (wantPlay){ player.unMute(); player.playVideo(); }
-      },
+      onReady: () => { ytReady = true; player.setVolume(0); if (wantPlay) startSong(); },
       onError: e => {
         // 2 = ID incorrecte · 100 = vídeo no existeix · 101/150 = el propietari no deixa incrustar-lo · 153 = pàgina oberta com a arxiu
         const why = { 2:"id", 5:"html5", 100:"no existeix", 101:"no incrustable", 150:"no incrustable", 153:"obre-la per http" }[e.data] || e.data;
@@ -480,6 +475,17 @@ if (!enterOk){
   const iv = setInterval(() => { if (ytReady){ clearInterval(iv); ok(); } }, 100);
   setTimeout(ok, 5000);   // si YouTube no respon, deixa entrar igualment
 }
+// la cançó comença des del principi en clicar, amb una entrada suau (fade-in d'~1,5 s)
+function startSong(){
+  const target = realVol(CONFIG.volume);
+  player.unMute(); player.setVolume(0); player.seekTo(0, true); player.playVideo();
+  let t = 0;
+  const iv = setInterval(() => {
+    t += 1;
+    player.setVolume(Math.round(realVol(CONFIG.volume) * Math.min(1, t / 15)));
+    if (t >= 15) clearInterval(iv);
+  }, 100);
+}
 $("enter").addEventListener("click", () => {
   if (!enterOk) return;
   $("enter").classList.add("hidden");
@@ -490,7 +496,7 @@ $("enter").addEventListener("click", () => {
     $("musicCtl").style.display = "flex";
   } else if (CONFIG.youtube){
     wantPlay = true;
-    if (ytReady){ player.setVolume(realVol(parseInt(vol.value,10) || CONFIG.volume)); player.unMute(); player.playVideo(); }
+    if (ytReady) startSong();
     $("musicCtl").style.display = "flex";
     // si el navegador (sobretot al mòbil) bloqueja l'àudio, ho diu i es pot activar amb un toc
     setTimeout(() => {
@@ -502,8 +508,8 @@ $("enter").addEventListener("click", () => {
 // xarxa de seguretat: si el so no ha arrencat, el primer toc/clic a la pàgina l'activa
 const kick = () => {
   if (useFile || !player || !ytReady || !wantPlay) return;
-  if (player.getPlayerState && player.getPlayerState() !== 1 || player.isMuted()){
-    player.unMute(); player.setVolume(realVol(CONFIG.volume)); player.playVideo();
+  if (player.getPlayerState && player.getPlayerState() !== 1){
+    startSong();
     $("musicBtn").textContent = "[ so: on ]";
   }
 };
