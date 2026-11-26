@@ -562,7 +562,7 @@ async function lanyard(){
     if (!j.success) return;
     const d = j.data;
     const col = { online:"#23a55a", idle:"#f0b232", dnd:"#f23f43", offline:"#9aa3af" };
-    const names = { online:"online", idle:"absent", dnd:"no molestar", offline:"offline" };
+    const names = { online:"online", idle:"away", dnd:"do not disturb", offline:"offline" };
     $("hudStatus").textContent = names[d.discord_status] || "offline";
     renderTags(d.discord_status === "online" || d.discord_status === "dnd");
     const act = $("activity");
@@ -571,7 +571,7 @@ async function lanyard(){
       act.innerHTML = `${ico("spotify")}<div>${esc(d.spotify.song)}<small>${esc(d.spotify.artist)}</small></div>`;
       act.style.display = "flex";
     } else if (game){
-      act.innerHTML = `${ico("gamepad")}<div>jugant a ${esc(game.name)}<small>${esc(game.details)}</small></div>`;
+      act.innerHTML = `${ico("gamepad")}<div>playing ${esc(game.name)}<small>${esc(game.details)}</small></div>`;
       act.style.display = "flex";
     } else act.style.display = "none";
   }catch(e){}
