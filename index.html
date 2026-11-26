@@ -291,7 +291,7 @@
   <div id="enter"><div class="box">
     <h2>iuer0<span>.</span></h2>
     <div class="bar"></div>
-    <p>[ clica per entrar ]</p>
+    <p>[ click to enter ]</p>
   </div></div>
   <div id="musicCtl">
     <button id="musicBtn">[ so: on ]</button>
@@ -333,7 +333,6 @@ const CONFIG = {
   avatar: AVATAR_DATA,      // la pfp va dins del fitxer (base64), no cal cap altre arxiu     // la teva pfp (mateixa carpeta que l'index.html)
   lang: "cat / es / en",      // línia sota "IT Student"
   bio: [
-    "vividor del cuento",
     "learning how 2 break (& fix) stuff",
     "it was dns (it's always dns)",
     "fixing what i broke 5 min ago",
@@ -476,7 +475,7 @@ window.onYouTubeIframeAPIReady = () => {
 const enterP = document.querySelector("#enter p"), enterTxt = enterP.textContent;
 let enterOk = useFile || !CONFIG.youtube;
 if (!enterOk){
-  enterP.textContent = "[ carregant... ]";
+  enterP.textContent = "[ loading... ]";
   const ok = () => { if (enterOk) return; enterOk = true; enterP.textContent = enterTxt; };
   const iv = setInterval(() => { if (ytReady){ clearInterval(iv); ok(); } }, 100);
   setTimeout(ok, 5000);   // si YouTube no respon, deixa entrar igualment
