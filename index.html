@@ -27,13 +27,16 @@
     --ink:#0b0f17;
     --paper:#f5f7fa;
     --muted:#6b7686;
+    --oninv:#fff; --card:rgba(255,255,255,.84); --solid:#fff;
+    --dots:rgba(11,15,23,.16); --frame:rgba(11,15,23,.55); --ghost:rgba(11,15,23,.13);
+    --n:0; --d:0;
     --mono:'JetBrains Mono',ui-monospace,monospace;
     --sans:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{height:100%;-webkit-text-size-adjust:100%}
   body{min-height:100vh;min-height:100dvh;
-    background:var(--paper) radial-gradient(rgba(11,15,23,.16) 1px,transparent 1.3px) 0 0/22px 22px;
+    background:var(--paper) radial-gradient(var(--dots) 1px,transparent 1.3px) 0 0/22px 22px;
     color:var(--ink);font-family:var(--sans);
     overflow-x:hidden;display:grid;
   }
@@ -48,7 +51,22 @@
   .cloud{position:absolute;border-radius:50%;background:#fff;filter:blur(26px);opacity:.7;
     animation:drift linear infinite}
   @keyframes drift{from{transform:translateX(-30px)}to{transform:translateX(60px)}}
-  .sky-label{position:absolute;left:18px;top:16px;font-family:var(--mono);font-size:.6rem;color:#fff;opacity:.9;
+  /* nit (offline) i capvespre (idle): capes sobre el cel que apareixen amb --n i --d */
+  .sky::after,.sky::before{content:"";position:absolute;inset:0;pointer-events:none}
+  .sky::after{z-index:1;opacity:var(--n);
+    background:radial-gradient(rgba(255,255,255,.85) .9px,transparent 1.4px) 0 0/37px 41px,
+               radial-gradient(rgba(190,215,255,.55) .7px,transparent 1.2px) 13px 19px/53px 47px,
+               linear-gradient(172deg,#030817 0%,#0a2052 45%,#173f8a 80%,#2a5aab 100%)}
+  .sky::before{z-index:2;opacity:var(--d);
+    background:radial-gradient(rgba(255,255,255,.7) .8px,transparent 1.3px) 7px 3px/43px 37px,
+               linear-gradient(172deg,#06102c 0%,#1d3474 38%,#5a5aa6 68%,#c98aa8 88%,#f0b39a 100%)}
+  .sky.small::after{background:linear-gradient(180deg,#0a2052,#2a5aab)}
+  .sky.small::before{background:linear-gradient(180deg,#1d3474,#c98aa8)}
+  .sky.tall::after{background:linear-gradient(180deg,#2a5aab,#0a2052 55%,#030817)}
+  .sky.tall::before{background:linear-gradient(180deg,#f0b39a,#5a5aa6 45%,#06102c)}
+  .sky.strip::after{background:linear-gradient(90deg,#0a2052,#2a5aab 60%,transparent)}
+  .sky.strip::before{background:linear-gradient(90deg,#1d3474,#c98aa8 60%,transparent)}
+  .sky-label{position:absolute;z-index:3;left:18px;top:16px;font-family:var(--mono);font-size:.6rem;color:#fff;opacity:.9;
     letter-spacing:.08em}
 
   #fx{position:fixed;inset:0;z-index:1;pointer-events:none}
@@ -82,7 +100,7 @@
   @keyframes rise{to{opacity:1;transform:none}}
 
   .card{width:min(410px,90vw);padding:22px 22px 16px;position:relative;
-    background:rgba(255,255,255,.84);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    background:var(--card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border:1px solid var(--ink)}
   .card .tick{position:absolute;width:7px;height:7px;background:var(--ink)}
   .tick.tl{top:-4px;left:-4px}.tick.tr{top:-4px;right:-4px}
@@ -92,14 +110,14 @@
   .stamp{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:.62rem;font-weight:600;
     letter-spacing:.12em;color:var(--ink);display:flex;align-items:center;gap:6px}
   .stamp::before{content:"";width:16px;height:3px;background:var(--blue)}
-  .avatar{width:108px;height:108px;flex:none;position:relative;border:1px solid var(--ink);background:#fff}
+  .avatar{width:108px;height:108px;flex:none;position:relative;border:1px solid var(--ink);background:var(--solid)}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
   .avatar::after{content:"";position:absolute;inset:0;
     background:linear-gradient(180deg,transparent 60%,rgba(47,124,246,.18))}
   .title{font-weight:900;font-size:2.9rem;letter-spacing:-.07em;line-height:.85}
   .title span{color:var(--blue)}
   .meta{font-family:var(--mono);font-size:.64rem;color:var(--muted);margin-top:8px;line-height:1.6}
-  .role{display:inline-block;margin-top:8px;padding:2px 7px;background:var(--ink);color:#fff;
+  .role{display:inline-block;margin-top:8px;padding:2px 7px;background:var(--ink);color:var(--oninv);
     font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.08em}
   .role::before{content:"■ ";color:var(--blue)}
   .cstatus{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -117,8 +135,12 @@
     box-shadow:0 0 0 2px rgba(35,165,90,.25);animation:live 2s ease-in-out infinite}
   @keyframes live{50%{box-shadow:0 0 0 4px rgba(35,165,90,0)}}
   .tags .moon{color:#8b939e;width:12px;height:12px}
+  /* icones com les de Discord: dnd (cercle vermell amb ratlla) i idle (lluna groga) */
+  .tags .dnd{position:relative;display:inline-block;width:10px;height:10px;border-radius:50%;background:#f23f43}
+  .tags .dnd::after{content:"";position:absolute;left:2px;right:2px;top:4px;height:2px;border-radius:1px;background:var(--paper)}
+  .tags .moon.idle{color:#f0b232}
   #yt{position:fixed;width:200px;height:200px;left:0;bottom:0;opacity:0;pointer-events:none;z-index:-1}
-  .links a.copied{background:var(--ink);border-color:var(--ink);color:#fff}
+  .links a.copied{background:var(--ink);border-color:var(--ink);color:var(--oninv)}
 
   .typed{font-family:var(--mono);font-size:.8rem;margin-top:12px;min-height:1.4em}
   .typed::before{content:"> ";color:var(--blue)}
@@ -133,7 +155,7 @@
   .activity small{display:block;color:var(--muted)}
 
   .links{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:16px}
-  .links a{display:flex;align-items:center;gap:7px;padding:8px 9px;border:1px solid var(--ink);background:#fff;
+  .links a{display:flex;align-items:center;gap:7px;padding:8px 9px;border:1px solid var(--ink);background:var(--solid);
     font-family:var(--mono);font-size:.66rem;color:var(--ink);text-decoration:none;
     transition:background .15s,color .15s,border-color .15s,transform .15s}
   .ic{width:14px;height:14px;fill:currentColor;flex:none;display:inline-block}
@@ -151,7 +173,7 @@
 
   /* ---------- entrada ---------- */
   #enter{position:fixed;inset:0;z-index:20;cursor:pointer;display:grid;place-items:center;
-    background:var(--paper) radial-gradient(rgba(11,15,23,.16) 1px,transparent 1.3px) 0 0/22px 22px;
+    background:var(--paper) radial-gradient(var(--dots) 1px,transparent 1.3px) 0 0/22px 22px;
     transition:opacity .7s}
   #enter.hidden{opacity:0;pointer-events:none}
   #enter .box{text-align:left}
@@ -181,13 +203,13 @@
     background:linear-gradient(180deg,#e8f3ff,#4f98f2 55%,#1c66db)}
   .sky.strip{width:min(520px,46vw);height:26px;transform:translate(-20%,560%);
     background:linear-gradient(90deg,#1c66db,#7fb6ff 60%,transparent)}
-  .frame{position:fixed;z-index:1;border:1px solid rgba(11,15,23,.55);pointer-events:none}
+  .frame{position:fixed;z-index:1;border:1px solid var(--frame);pointer-events:none}
   .frame.f1{width:min(820px,94vw);height:min(540px,70vh);left:50%;top:50%;transform:translate(-47%,-51%)}
   .frame.f2{width:min(260px,32vw);height:min(170px,22vh);left:50%;top:50%;transform:translate(138%,84%);border-style:dashed}
   .frame.f3{width:120px;height:120px;left:6%;top:58%;border-color:rgba(47,124,246,.7)}
   .ghost{position:fixed;z-index:0;left:-2vw;bottom:-6vw;font-family:var(--sans);font-weight:900;
     font-size:24vw;letter-spacing:.01em;line-height:.8;color:transparent;
-    -webkit-text-stroke:1px rgba(11,15,23,.13);pointer-events:none;user-select:none}
+    -webkit-text-stroke:1px var(--ghost);pointer-events:none;user-select:none}
   .ruler{position:fixed;z-index:2;left:0;right:0;top:0;height:9px;pointer-events:none;opacity:.6;
     background:repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 10px),
                repeating-linear-gradient(90deg,var(--ink) 0 1px,transparent 1px 50px);
@@ -202,7 +224,7 @@
   .halftone.h2{left:14%;bottom:4%;width:160px;height:160px;
     background-image:radial-gradient(var(--ink) 1.2px,transparent 1.4px)}
   .tagbox{position:fixed;z-index:2;font-family:var(--mono);font-size:.55rem;pointer-events:none}
-  .tagbox b{display:inline-block;background:var(--ink);color:#fff;padding:2px 6px;font-weight:600;letter-spacing:.1em}
+  .tagbox b{display:inline-block;background:var(--ink);color:var(--oninv);padding:2px 6px;font-weight:600;letter-spacing:.1em}
   .tagbox span{display:inline-block;background:var(--blue);color:#fff;padding:2px 6px}
   .tagbox.t1{top:13%;left:31%}
   .tagbox.t2{bottom:11%;right:27%}
@@ -370,14 +392,57 @@ const esc = s => { const t = document.createElement("span"); t.textContent = s ?
 // --- contingut ---
 $("name").innerHTML = `${esc(CONFIG.name)}<span>.</span>`;
 const img = new Image(); img.alt = CONFIG.name; img.src = CONFIG.avatar; $("avatar").appendChild(img);
-function renderTags(available){
+function renderTags(status){
   const base = CONFIG.tags.map(esc).join('<span class="sep">/</span>');
-  const st = available
-    ? '<span class="st on"><i class="live"></i>available</span>'
+  const st = status === "online" ? '<span class="st on"><i class="live"></i>available</span>'
+    : status === "dnd" ? '<span class="st on"><i class="dnd"></i>busy</span>'
+    : status === "idle" ? `<span class="st">${ico("moon","moon idle")}afk</span>`
     : `<span class="st">${ico("moon","moon")}afk</span>`;
   $("tags").innerHTML = base + '<span class="sep">/</span>' + st;
 }
-renderTags(false);   // per defecte afk, fins que Discord digui que ets connectat
+renderTags("offline");   // per defecte afk, fins que Discord digui que ets connectat
+
+// --- tema segons l'estat de Discord: dia (online/dnd), capvespre (idle), nit (offline) ---
+const PAL = {   // [dia, nit] en rgba
+  paper:[[245,247,250,1],[52,78,130,1],[6,10,20,1]],      ink:[[11,15,23,1],[226,233,244,1]],
+  muted:[[107,118,134,1],[133,146,168,1]],  oninv:[[255,255,255,1],[6,10,20,1]],
+  card:[[255,255,255,.84],[44,66,112,.8],[10,16,30,.78]],  solid:[[255,255,255,1],[48,72,120,1],[12,19,35,1]],
+  dots:[[11,15,23,.16],[150,180,230,.16]],  frame:[[11,15,23,.55],[170,195,235,.35]],
+  ghost:[[11,15,23,.13],[170,200,255,.12]]
+};
+const THEMES = { online:[0,0], dnd:[1,1], idle:[1,0], offline:[1,0] };
+const lerp = (a, b, t) => a + (b - a) * t;
+const mix2 = (a, b, t) => `rgba(${[0,1,2].map(i => Math.round(lerp(a[i], b[i], t))).join(",")},${lerp(a[3], b[3], t).toFixed(3)})`;
+// 3 colors: passa per un blau de capvespre en lloc d'un gris
+const mixc = (p, t) => p.length === 3 ? (t < .5 ? mix2(p[0], p[1], t * 2) : mix2(p[1], p[2], (t - .5) * 2)) : mix2(p[0], p[1], t);
+// el text canvia més de pressa al mig perquè no es perdi mai durant la transició
+const SHARP = { ink:1, muted:1, oninv:1 };
+const sharp = t => { const f = x => 1 / (1 + Math.exp(-14 * (x - .5))); return (f(t) - f(0)) / (f(1) - f(0)); };
+let N = 0, D = 0, NT = -1, DT = -1, tw = 0;
+function applyTheme(){
+  const st = document.documentElement.style;
+  for (const k in PAL) st.setProperty("--" + k, mixc(PAL[k], SHARP[k] ? sharp(N) : N));
+  st.setProperty("--n", N.toFixed(3)); st.setProperty("--d", D.toFixed(3));
+}
+function setTheme(status, instant){
+  const [nt, dt] = THEMES[status] || THEMES.offline;
+  if (nt === NT && dt === DT) return;
+  NT = nt; DT = dt;
+  try{ localStorage.setItem("iuer0-status", status); }catch(e){}
+  cancelAnimationFrame(tw);
+  if (instant || REDUCED){ N = nt; D = dt; applyTheme(); return; }
+  const n0 = N, d0 = D, t0 = performance.now(), dur = 2800;
+  const step = now => {
+    const k = Math.min(1, (now - t0) / dur), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    N = lerp(n0, nt, e); D = lerp(d0, dt, e); applyTheme();
+    if (k < 1) tw = requestAnimationFrame(step);
+  };
+  tw = requestAnimationFrame(step);
+}
+// per provar-ho: iuer0.com/?status=offline (o idle, dnd, online)
+const FORCE = new URLSearchParams(location.search).get("status");
+{ let last = FORCE; if (!last) try{ last = localStorage.getItem("iuer0-status"); }catch(e){}
+  if (last){ setTheme(last, true); renderTags(last); } }
 CONFIG.links.forEach(l => {
   const a = document.createElement("a");
   a.innerHTML = `${ico(l.icon)}<span>${esc(l.label)}</span>`;
@@ -562,10 +627,12 @@ async function lanyard(){
     const j = await (await fetch(`https://api.lanyard.rest/v1/users/${CONFIG.discordId}`)).json();
     if (!j.success) return;
     const d = j.data;
+    if (FORCE) d.discord_status = FORCE;
+    setTheme(d.discord_status);
     const col = { online:"#23a55a", idle:"#f0b232", dnd:"#f23f43", offline:"#9aa3af" };
     const names = { online:"online", idle:"away", dnd:"do not disturb", offline:"offline" };
     $("hudStatus").textContent = names[d.discord_status] || "offline";
-    renderTags(d.discord_status === "online" || d.discord_status === "dnd");
+    renderTags(d.discord_status);
     const act = $("activity");
     const game = (d.activities || []).find(a => a.type === 0);
     const rows = [];
@@ -635,6 +702,17 @@ function path(r, t, cx, cy, L, steps){
   return pts;
 }
 
+const CP = {   // colors del canvas [dia, nit]
+  e0:[[255,255,255,0],[140,180,255,0]], e1:[[255,255,255,.95],[150,185,245,.55]],
+  midL:[[127,182,255,1],[30,66,140,1]], midD:[[15,47,110,1],[8,20,48,1]],
+  wh:[[255,255,255,1],[170,205,255,.95]], m2L:[[63,134,238,1],[40,100,210,1]], m2D:[[27,79,176,1],[18,45,110,1]],
+  ice:[[234,244,255,1],[70,110,190,.9]], e2:[[160,200,255,.7],[60,100,190,.5]],
+  top:[[255,255,255,.95],[175,210,255,.6]], bot:[[10,30,70,.45],[0,0,0,.55]],
+  hB:[[47,124,246,.5],[80,145,255,.45]], hI:[[11,15,23,.28],[190,210,240,.14]],
+  rI:[[11,15,23,.18],[190,210,240,.12]], rB:[[47,124,246,.3],[80,145,255,.3]]
+};
+let C = {}, CN = -1;
+function canvasColors(){ if (CN === N) return; CN = N; for (const k in CP) C[k] = mixc(CP[k], N); }
 function drawRibbon(r, t, cx, cy, L){
   const pts = path(r, t, cx, cy, L, 70), top = [], bot = [];
   for (let i = 0; i < pts.length; i++){
@@ -646,24 +724,24 @@ function drawRibbon(r, t, cx, cy, L){
     bot.push([p[0] - nx * w / 2, p[1] - ny * w / 2]);
   }
   const g = ctx.createLinearGradient(pts[0][0], pts[0][1], pts.at(-1)[0], pts.at(-1)[1]);
-  const mid = r.dark ? "#0f2f6e" : "#7fb6ff", mid2 = r.dark ? "#1b4fb0" : "#3f86ee";
-  g.addColorStop(0, "rgba(255,255,255,0)");
-  g.addColorStop(.22, "rgba(255,255,255,.95)");
+  const mid = r.dark ? C.midD : C.midL, mid2 = r.dark ? C.m2D : C.m2L;
+  g.addColorStop(0, C.e0);
+  g.addColorStop(.22, C.e1);
   g.addColorStop(.38, mid);
-  g.addColorStop(.47, "#ffffff");
+  g.addColorStop(.47, C.wh);
   g.addColorStop(.58, mid2);
-  g.addColorStop(.72, "#eaf4ff");
-  g.addColorStop(.85, "rgba(160,200,255,.7)");
-  g.addColorStop(1, "rgba(255,255,255,0)");
+  g.addColorStop(.72, C.ice);
+  g.addColorStop(.85, C.e2);
+  g.addColorStop(1, C.e0);
   ctx.beginPath();
   top.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
   for (let i = bot.length - 1; i >= 0; i--) ctx.lineTo(bot[i][0], bot[i][1]);
   ctx.closePath(); ctx.fillStyle = g; ctx.globalAlpha = .9; ctx.fill();
   // vores: brillantor i ombra
   ctx.globalAlpha = .9; ctx.lineWidth = 1;
-  ctx.strokeStyle = "rgba(255,255,255,.95)";
+  ctx.strokeStyle = C.top;
   ctx.beginPath(); top.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
-  ctx.strokeStyle = "rgba(10,30,70,.45)"; ctx.lineWidth = .8;
+  ctx.strokeStyle = C.bot; ctx.lineWidth = .8;
   ctx.beginPath(); bot.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
   ctx.globalAlpha = 1;
 }
@@ -672,6 +750,7 @@ let frameN = 0;
 (function loop(ms){
   if (MOBILE && !REDUCED && (frameN++ & 1)){ requestAnimationFrame(loop); return; }   // 30 fps al mòbil: menys bateria
   const t = ms / 1000;
+  canvasColors();
   mx += (tmx - mx) * .05; my += (tmy - my) * .05;
   ctx.clearRect(0, 0, W, H);
   const cx = W * .56 + mx * 40, cy = H * .47 + my * 30;
@@ -679,14 +758,14 @@ let frameN = 0;
 
   for (const h of HAIR){
     const pts = path(h, t, cx, cy, L, 50);
-    ctx.strokeStyle = h.blue ? "rgba(47,124,246,.5)" : "rgba(11,15,23,.28)";
+    ctx.strokeStyle = h.blue ? C.hB : C.hI;
     ctx.lineWidth = .7;
     ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke();
   }
   // anells concèntrics al voltant del centre
   ctx.lineWidth = .6;
   for (let k = 1; k <= 4; k++){
-    ctx.strokeStyle = k % 2 ? "rgba(11,15,23,.18)" : "rgba(47,124,246,.3)";
+    ctx.strokeStyle = k % 2 ? C.rI : C.rB;
     ctx.beginPath(); ctx.ellipse(cx, cy, 90 * k + Math.sin(t * .4 + k) * 6, 40 * k, -.35, 0, Math.PI * 2); ctx.stroke();
   }
   const cx2 = W * .86 - mx * 25, cy2 = H * .8 - my * 20;
