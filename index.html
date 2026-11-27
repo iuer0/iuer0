@@ -112,6 +112,8 @@
   .stamp::before{content:"";width:16px;height:3px;background:var(--blue)}
   .avatar{width:108px;height:108px;flex:none;position:relative;border:1px solid var(--ink);background:var(--solid)}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  /* versió de nit (avatar-night.jpg): fons blau com el cel, traç blanc i ull amb el color original */
+  .avatar img.night{position:absolute;inset:0;opacity:var(--n)}
   .avatar::after{content:"";position:absolute;inset:0;
     background:linear-gradient(180deg,transparent 60%,rgba(47,124,246,.18))}
   .title{font-weight:900;font-size:2.9rem;letter-spacing:-.07em;line-height:.85}
@@ -353,7 +355,8 @@ const AVATAR_DATA = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQD
 /* ================== CONFIGURACIÓ: canvia només això ================== */
 const CONFIG = {
   name: "iuer0",
-  avatar: AVATAR_DATA,      // la pfp va dins del fitxer (base64), no cal cap altre arxiu     // la teva pfp (mateixa carpeta que l'index.html)
+  avatar: AVATAR_DATA,
+  avatarNight: "avatar-night.jpg",      // la pfp va dins del fitxer (base64), no cal cap altre arxiu     // la teva pfp (mateixa carpeta que l'index.html)
   lang: "cat / es / en",      // línia sota "IT Student"
   bio: [
     "learning how 2 break (& fix) stuff",
@@ -392,6 +395,8 @@ const esc = s => { const t = document.createElement("span"); t.textContent = s ?
 // --- contingut ---
 $("name").innerHTML = `${esc(CONFIG.name)}<span>.</span>`;
 const img = new Image(); img.alt = CONFIG.name; img.src = CONFIG.avatar; $("avatar").appendChild(img);
+{ const n = new Image(); n.alt = ""; n.className = "night"; n.src = CONFIG.avatarNight || CONFIG.avatar; $("avatar").appendChild(n);
+  const d = document.createElement("i"); d.className = "dusk"; $("avatar").appendChild(d); }
 function renderTags(status){
   const base = CONFIG.tags.map(esc).join('<span class="sep">/</span>');
   const st = status === "online" ? '<span class="st on"><i class="live"></i>available</span>'
