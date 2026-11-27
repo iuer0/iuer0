@@ -452,7 +452,7 @@ CONFIG.links.forEach(l => {
   const a = document.createElement("a");
   a.innerHTML = `${ico(l.icon)}<span>${esc(l.label)}</span>`;
   if (l.mail){
-    a.href = "#"; a.title = "correu";
+    a.href = "#";
     a.addEventListener("click", e => { e.preventDefault(); location.href = "mai" + "lto:" + l.mail.join("@"); });
   } else if (l.copy){
     a.href = "#"; a.title = l.copy;
