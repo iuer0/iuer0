@@ -112,6 +112,12 @@
   .stamp::before{content:"";width:16px;height:3px;background:var(--blue)}
   .avatar{width:108px;height:108px;flex:none;position:relative;border:1px solid var(--ink);background:var(--solid)}
   .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  /* versió de nit: el mateix dibuix invertit (fons fosc, traç clar) que apareix amb --n */
+  .avatar img.night{position:absolute;inset:0;opacity:var(--n);
+    filter:invert(1) hue-rotate(180deg) brightness(1.25) contrast(1.15)}
+  /* capvespre (dnd): un vel càlid a sota, com la posta del cel */
+  .avatar .dusk{position:absolute;inset:0;opacity:var(--d);pointer-events:none;mix-blend-mode:screen;
+    background:linear-gradient(180deg,transparent 35%,rgba(201,138,168,.35) 75%,rgba(240,179,154,.45))}
   .avatar::after{content:"";position:absolute;inset:0;
     background:linear-gradient(180deg,transparent 60%,rgba(47,124,246,.18))}
   .title{font-weight:900;font-size:2.9rem;letter-spacing:-.07em;line-height:.85}
@@ -392,6 +398,8 @@ const esc = s => { const t = document.createElement("span"); t.textContent = s ?
 // --- contingut ---
 $("name").innerHTML = `${esc(CONFIG.name)}<span>.</span>`;
 const img = new Image(); img.alt = CONFIG.name; img.src = CONFIG.avatar; $("avatar").appendChild(img);
+{ const n = new Image(); n.alt = ""; n.className = "night"; n.src = CONFIG.avatar; $("avatar").appendChild(n);
+  const d = document.createElement("i"); d.className = "dusk"; $("avatar").appendChild(d); }
 function renderTags(status){
   const base = CONFIG.tags.map(esc).join('<span class="sep">/</span>');
   const st = status === "online" ? '<span class="st on"><i class="live"></i>available</span>'
